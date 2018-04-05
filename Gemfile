@@ -52,3 +52,14 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+
+group :test do
+  gem 'factory_bot_rails'
+  gem 'shoulda'
+  gem 'shoulda-matchers'
+  gem 'simplecov'
+  gem 'single_test'
+  gem 'minitest', '5.10.3'
+  gem 'minitest-rails', '3.0.0'
+end
