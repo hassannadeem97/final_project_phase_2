@@ -10,13 +10,16 @@ class Camp < ApplicationRecord
     validates :location_id, presence: true
     validates :start_date, presence: true
     validates :end_date, presence: true
-    validates :time_slot, presence: true, :format => { :with => /\A[ap]m\z/ } #not sure how to validate regex
+    validates :time_slot, presence: true, :format => { :with => /\A[ap]m\z/ } 
     validates :start_date, uniqueness: { scope: [:location_id, :time_slot] }, :on => :create
-    validates :max_students, numericality: {greater_than_or_equal_to: 0}  
-    #validate :check # not sure how to test
+    validates :max_students, numericality: {greater_than_or_equal_to: 0} 
+   
+    validate :check # have to unit test
       
-    # validate :start_date_check #not sure how to test
-    # validate :end_date_check #not sure how to test
+    #validate :start_date_check #not sure how to test
+    #validate :end_date_check #not sure how to test
+    validate :location_id_check #have to unit test
+    validate :curriculum_id_check #have to unit test
     
     
     
@@ -25,29 +28,31 @@ class Camp < ApplicationRecord
     scope :active, -> { where(active: true) }
     scope :inactive, -> { where(active: false) }
     scope :alphabetical, -> {joins(:curriculum).order('curriculums.name')}
-    scope :chronological, -> {order(:start_date, :end_date)}
+    scope :chronological, -> {order(:start_date, :end_date)} #does not work
     scope :morning, -> { where(time_slot: "am")}
     scope :afternoon, -> { where(time_slot: "pm")}
     scope :upcoming, -> {where("start_date >= ?", Date.today)}
     scope :past, -> {where("end_date < ?", Date.today)}
     scope :for_curriculum, ->(curriculum_id) { where("curriculum_id = ?", curriculum_id )}
     
-    # def check
+    def check
+        if self.location != nil 
+            if max_students > self.location.max_capacity
+                errors.add(:max_students, "can't be greater than the capacity")
+            end 
+        end
           
-    #   if max_students > self.location.max_capacity
-    #     errors.add(:max_students, "maximum no. of students can't be greater than the capacity")
-    #   end
-          
-    # end 
+    end 
     
    
     
     # def start_date_check
-    
-    #   if start_date < Date.today
-    #     errors.add(:start_date, "has to be the same as current date or in the future")
+    #     if start_date < Date.today
+    #         errors.add(:start_date, "has to be the same as current date or in the future")
+    #     end 
     # end
-    # end 
+     
+    
     
     
     
@@ -58,16 +63,41 @@ class Camp < ApplicationRecord
     # end 
     
     
+    def curriculum_id_check
+        if self.curriculum != nil 
+            if self.curriculum.active == false 
+                errors.add(:curriculum_id, "should be active ")
+            end 
+        end 
+    end 
     
-    def inactive #check by looping 
+    def location_id_check
+        if self.location != nil
+            if self.location.active == false 
+                errors.add(:location_id, "should be active ")
+            end
+        end 
+    end 
+    
+    
+    
+    def inactive_camp #have to unit test
         if self.active == false 
             self.camp_instructors.each {|c| c.destroy}
         end 
     end
     
-    def name  
-      self.curriculum.name 
+    def name 
+      self.curriculum.name
     end 
     
+    
+    def name1  
+      "#{self.curriculum.name} #{self.location.name}"
+    end 
+    
+    def date 
+        "#{self.start_date}, #{self.end_date}"
+    end 
     
 end

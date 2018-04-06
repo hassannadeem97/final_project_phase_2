@@ -7,8 +7,8 @@ class Instructor < ApplicationRecord
     validates_length_of :phone, :maximum => 10
     scope :active, -> { where(active: true) }
     scope :inactive, -> { where(active: false) }
-    scope :alphabetical, -> { order(:last_name,:first_name) } # not sure how to unit test
-    scope :empty, -> {where("bio = ?", nil)}
+    scope :alphabetical, -> { order(:last_name,:first_name) } 
+    scope :empty, -> {where(bio: nil)}
     
     def name
        "#{last_name},#{first_name}"

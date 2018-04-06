@@ -6,7 +6,6 @@ class CampTest < ActiveSupport::TestCase
   # end
   should have_many :camp_instructors
   should belong_to :curriculum
-  
   should belong_to :location
   should validate_uniqueness_of(:start_date).scoped_to(:location_id, :time_slot).on(:create)
   
@@ -18,11 +17,16 @@ class CampTest < ActiveSupport::TestCase
   should validate_presence_of(:time_slot)
   should allow_value('am').for(:time_slot)
   should allow_value('pm').for(:time_slot)
+  should_not allow_value('sdkk0').for(:time_slot)
+  should validate_numericality_of(:max_students).is_greater_than_or_equal_to(0)
   
   
-  context "Creating a set of curriculum" do
+  
+  context "Creating a set of camps" do
     setup do
       create_camp
+      
+      
     end
 
     teardown do
@@ -30,26 +34,48 @@ class CampTest < ActiveSupport::TestCase
     end
   
   
-  # should "have a scope to alphabetize curriculum names" do
-  #     assert_equal ["BA","CS","IS"], Curriculum.alphabetical.all.map(&:name),"#{Curriculum.class}"
-  # end
+  should "have a scope that returns active camps" do
+      assert_equal ["IS ghanim", "IS najma"], Camp.active.alphabetical.map{|c| c.name1}
+  end
   
+  should "have a scope that returns inactive camps" do
+      assert_equal ["CS ghanim"], Camp.inactive.alphabetical.map{|c| c.name1}
+  end
   
+ should "have a scope to alphabetize curriculum names of the camps" do
+      assert_equal ["CS","IS", "IS"], Camp.alphabetical.all.map(&:name),"#{Camp.class}"
+  end
   
-  # should "have a scope that returns active curriculums" do
-  #     assert_equal ["CS", "IS"], Curriculum.active.alphabetical.map{|c| c.name}
-  # end
+  should "have a scope that returns camps in chronological order" do    
+      assert_equal ["2018-02-03, 2018-04-03", "2018-04-06, 2018-04-08", "2018-04-09, 2018-04-10"], Camp.chronological.map{|c| c.date}
+  end
   
-  # should "have a scope that returns inactive curriculums" do
-  #     assert_equal ["BA"], Curriculum.inactive.alphabetical.map{|c| c.name}
-  # end
+  should "have a scope that returns morning time_slot camps" do
+      assert_equal ["IS ghanim", "CS ghanim"], Camp.morning.map{|c| c.name1}
+  end
   
-  # should "have a scope for checking rating" do
-  #     assert_equal 3, Curriculum.for_rating(1000).size
-  # end
+  should "have a scope that returns afternoon time_slot camps" do
+      assert_equal ["IS najma"], Camp.afternoon.map{|c| c.name1}
+  end
   
+  should "have a scope that returns upcoming camps" do
+      assert_equal 2, Camp.upcoming.size
+  end
   
+  should "have a scope that returns past camps" do
+      assert_equal 1, Camp.past.size
+  end
   
+  should "have a scope that returns camp for specific curriculum" do
+      assert_equal ["CS ghanim"], Camp.for_curriculum(980190964).map{|c| c.name1}
+  end
+  
+  should "have a name method that lists the name of the curriculum being used in the camp" do
+      assert_equal "IS", @cam1.name
+      assert_equal "IS", @cam2.name
+      assert_equal "CS", @cam3.name
+    end
+    
   
   
   

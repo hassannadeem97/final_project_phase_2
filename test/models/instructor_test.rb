@@ -12,6 +12,7 @@ class InstructorTest < ActiveSupport::TestCase
   should validate_uniqueness_of(:email)
   should validate_length_of(:phone).is_at_most(10)
   should allow_value('1234567890').for(:phone)
+  should_not allow_value('82898199dnjndjnsd').for(:phone)
   
 context "Creating a set of instructor" do
     setup do
@@ -19,7 +20,7 @@ context "Creating a set of instructor" do
     end
 
     teardown do
-      # destroy_instructor 
+      destroy_instructor 
     end
   
   
@@ -34,22 +35,26 @@ context "Creating a set of instructor" do
       assert_equal "Jadeem,Jassan", @ins2.name
       assert_equal "Kadeem,Kassan", @ins3.name
     end
+    
+    # should "have name methods that lists an array of instructors for a desired camp" do
+    #   assert_equal "nadeem,hassan", @ins1.for_camp
+    # end
   
   
   should "have a scope that returns active Instructors" do
       assert_equal ["Jassan", "hassan"], Instructor.active.alphabetical.all.map{|c| c.first_name}
   end
   
-  # should "have a scope to alphabetize Instructor" do
-  #     assert_equal ["Alex", "Mark", "Rachel"], Instructor.alphabetical.map{|c| c.first_name}
-  # end
+  should "have a scope to alphabetize Instructor" do
+      assert_equal ["Jadeem,Jassan", "Kadeem,Kassan", "nadeem,hassan"], Instructor.alphabetical.map{|c| c.name}
+  end
   
   should "have a scope that returns inactive Instructors" do
       assert_equal ["Kassan"], Instructor.inactive.alphabetical.map{|c| c.first_name}
   end
   
   should "have a scope that returns Instructors that don't have a bio" do
-      assert_equal ["Jassan", "hassan"], Instructor.alphabetical.map{|c| c.first_name if c.bio == nil }.reject(&:nil?)
+      assert_equal ["hassan", "Jassan"], Instructor.empty.map{|c| c.first_name }
     end
     
     

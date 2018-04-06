@@ -13,6 +13,7 @@ class LocationTest < ActiveSupport::TestCase
   should validate_presence_of(:zip)
   should validate_length_of(:zip).is_equal_to(5)
   should allow_value('12345').for(:zip)
+  should_not allow_value('123mkm2').for(:zip)
   
   context "Creating a set of location" do
     setup do
