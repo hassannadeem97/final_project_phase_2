@@ -19,7 +19,7 @@ class CampTest < ActiveSupport::TestCase
   should allow_value('pm').for(:time_slot)
   should_not allow_value('sdkk0').for(:time_slot)
   should validate_numericality_of(:max_students).is_greater_than_or_equal_to(0)
-  
+
   
   
   context "Creating a set of camps" do
@@ -42,12 +42,12 @@ class CampTest < ActiveSupport::TestCase
       assert_equal ["CS ghanim"], Camp.inactive.alphabetical.map{|c| c.name1}
   end
   
- should "have a scope to alphabetize curriculum names of the camps" do
+should "have a scope to alphabetize curriculum names of the camps" do
       assert_equal ["CS","IS", "IS"], Camp.alphabetical.all.map(&:name),"#{Camp.class}"
   end
   
   should "have a scope that returns camps in chronological order" do    
-      assert_equal ["2018-02-03, 2018-04-03", "2018-04-06, 2018-04-08", "2018-04-09, 2018-04-10"], Camp.chronological.map{|c| c.date}
+      assert_equal ["2018-02-03, 2018-04-03", "#{Date.today}, 2018-04-08", "2018-04-09, 2018-04-10"], Camp.chronological.map{|c| c.date}
   end
   
   should "have a scope that returns morning time_slot camps" do
@@ -76,6 +76,22 @@ class CampTest < ActiveSupport::TestCase
       assert_equal "CS", @cam3.name
     end
     
+    
+  should "have a name validation/method that checks if the location is active" do
+      assert_nil nil, @cam1.location_id_check
+      assert_nil nil, @cam2.location_id_check
+      assert_nil nil, @cam3.location_id_check
+    end
+    
+  should "have a name validation/method that checks if the curriculum  is active" do
+      assert_nil nil, @cam1.curriculum_id_check
+      assert_nil nil, @cam2.curriculum_id_check
+      assert_nil nil, @cam3.curriculum_id_check
+    end
+    
+  
+    
+  
   
   
   

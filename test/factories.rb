@@ -37,4 +37,9 @@ FactoryBot.define do
     time_slot "am"
   end 
   
+  factory :camp_instructor do 
+    camp_id 1
+    instructor_id 1
+  end 
+  
 end       
