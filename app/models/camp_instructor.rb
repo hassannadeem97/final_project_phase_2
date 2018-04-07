@@ -1,9 +1,11 @@
 class CampInstructor < ApplicationRecord
-    
+    #relationships
     belongs_to :instructor
     belongs_to :camp
-    validates :camp_id, presence: true
-    validates :instructor_id, presence: true
+    
+    #validations
+    validates :camp_id, presence: true, numericality: { greater_than: 0, only_integer: true}
+    validates :instructor_id, presence: true, numericality: { greater_than: 0, only_integer: true}
     validates_uniqueness_of :camp_id, scope: :instructor_id
     validate :instructor_active
     validate :camp_active

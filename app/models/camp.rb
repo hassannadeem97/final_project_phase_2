@@ -1,34 +1,34 @@
 class Camp < ApplicationRecord
+    #relationships
+    
     has_many :camp_instructors
     belongs_to :location
-    belongs_to :curriculum 
+    belongs_to :curriculum
     
     
-    
-    validates :cost, presence: true
-    validates :curriculum_id, presence: true
-    validates :location_id, presence: true
+    #valiations 
+    validates :cost, presence: true, numericality: {greater_than_or_equal_to: 0} 
+    validates :curriculum_id, presence: true, numericality: {greater_than: 0} 
+    validates :location_id, presence: true, numericality: {greater_than: 0} 
     validates :start_date, presence: true
     validates :end_date, presence: true
     validates :time_slot, presence: true, :format => { :with => /\A[ap]m\z/ } 
     validates :start_date, uniqueness: { scope: [:location_id, :time_slot] }, :on => :create
     validates :max_students, numericality: {greater_than_or_equal_to: 0} 
-   
-    validate :check # have to unit test
-      
-    #validate :start_date_check #not sure how to test
-    #validate :end_date_check #not sure how to test
-    validate :location_id_check #have to unit test
-    validate :curriculum_id_check #have to unit test
+    validates :active, inclusion: { in: [true, false] }
+    validate :check 
+    #validate :start_date_check, :on => :create
+    #validate :end_date_check 
+    validate :location_id_check 
+    validate :curriculum_id_check 
     
     
     
-    
-    
+    #scopes 
     scope :active, -> { where(active: true) }
     scope :inactive, -> { where(active: false) }
     scope :alphabetical, -> {joins(:curriculum).order('curriculums.name')}
-    scope :chronological, -> {order(:start_date, :end_date)} #does not work
+    scope :chronological, -> {order(:start_date, :end_date)} 
     scope :morning, -> { where(time_slot: "am")}
     scope :afternoon, -> { where(time_slot: "pm")}
     scope :upcoming, -> {where("start_date >= ?", Date.today)}
@@ -47,9 +47,11 @@ class Camp < ApplicationRecord
    
     
     # def start_date_check
+    #     
     #     if start_date < Date.today
     #         errors.add(:start_date, "has to be the same as current date or in the future")
     #     end 
+    #      
     # end
      
     
@@ -57,9 +59,9 @@ class Camp < ApplicationRecord
     
     
     # def end_date_check
-    #   if end_date < start_date
-    #     errors.add(:end_date, "has to be the same as the start date or in the future")
-    #   end 
+    #     if end_date < start_date
+    #         errors.add(:end_date, "has to be the same as the start date or in the future")
+    #     end
     # end 
     
     
@@ -81,7 +83,7 @@ class Camp < ApplicationRecord
     
     
     
-    def inactive_camp #have to unit test
+    def remove_instructors 
         if self.active == false 
             self.camp_instructors.each {|c| c.destroy}
         end 

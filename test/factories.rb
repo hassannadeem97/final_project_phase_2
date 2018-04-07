@@ -25,12 +25,12 @@ FactoryBot.define do
   factory :instructor do 
     first_name "Hassan"
     last_name "Nadeem"
-    email "hassan_nadeem97@hotmail.com"
+    email "person@example.com" 
   end 
   
   factory :camp do
-    curriculum_id 1
-    location_id 1
+    association :curriculum
+    association :location
     cost 12.5
     start_date Date.today
     end_date  Date.today
@@ -38,8 +38,8 @@ FactoryBot.define do
   end 
   
   factory :camp_instructor do 
-    camp_id 1
-    instructor_id 1
+    association :camp
+    association :instructor
   end 
   
 end       

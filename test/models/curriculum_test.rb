@@ -41,9 +41,5 @@ class CurriculumTest < ActiveSupport::TestCase
   end
   
   
-  
-  
-  
-  
   end
 end

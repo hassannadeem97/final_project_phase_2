@@ -1,5 +1,6 @@
 require 'test_helper'
 
+
 class InstructorTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
@@ -14,33 +15,28 @@ class InstructorTest < ActiveSupport::TestCase
   should allow_value('1234567890').for(:phone)
   should_not allow_value('82898199dnjndjnsd').for(:phone)
   
-context "Creating a set of instructor" do
+  context "Creating a set of instructor" do
     setup do
       create_instructor
     end
 
-    teardown do
-      destroy_instructor 
-    end
+    # teardown do
+    #   destroy_instructor 
+    # end
   
   
   should "have name methods that list first_ and last_names combined" do
       assert_equal "hassan nadeem", @ins1.proper_name
       assert_equal "Jassan Jadeem", @ins2.proper_name
       assert_equal "Kassan Kadeem", @ins3.proper_name
-    end
+  end
     
-    should "have name methods that list last_name,first_name combined" do
+  should "have name methods that list last_name,first_name combined" do
       assert_equal "nadeem,hassan", @ins1.name
       assert_equal "Jadeem,Jassan", @ins2.name
       assert_equal "Kadeem,Kassan", @ins3.name
-    end
+  end
     
-    # should "have name methods that lists an array of instructors for a desired camp" do
-    #   assert_equal "nadeem,hassan", @ins1.for_camp
-    # end
-  
-  
   should "have a scope that returns active Instructors" do
       assert_equal ["Jassan", "hassan"], Instructor.active.alphabetical.all.map{|c| c.first_name}
   end
@@ -55,11 +51,15 @@ context "Creating a set of instructor" do
   
   should "have a scope that returns Instructors that don't have a bio" do
       assert_equal ["hassan", "Jassan"], Instructor.empty.map{|c| c.first_name }
-    end
+  end
     
     
-
+  should "have a method that returns Instructors for a camp" do
+      assert_nil nil, Instructor.new.for_camp(@cam1)
+  end
   
-end
+  
+  
+  end
 end 
 

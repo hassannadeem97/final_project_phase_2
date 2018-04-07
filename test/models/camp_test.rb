@@ -8,13 +8,19 @@ class CampTest < ActiveSupport::TestCase
   should belong_to :curriculum
   should belong_to :location
   should validate_uniqueness_of(:start_date).scoped_to(:location_id, :time_slot).on(:create)
-  
   should validate_presence_of(:cost)
   should validate_presence_of(:curriculum_id)
   should validate_presence_of(:location_id)
   should validate_presence_of(:start_date)
   should validate_presence_of(:end_date)
   should validate_presence_of(:time_slot)
+  should_not allow_value(nil).for(:curriculum_id)
+  should_not allow_value(nil).for(:location_id)
+  should_not allow_value(-100).for(:cost)
+  should validate_numericality_of(:curriculum_id).is_greater_than(0)
+  should validate_numericality_of(:location_id).is_greater_than(0)
+  should_not allow_value('as').for(:curriculum_id)
+  should_not allow_value('pp').for(:location_id)
   should allow_value('am').for(:time_slot)
   should allow_value('pm').for(:time_slot)
   should_not allow_value('sdkk0').for(:time_slot)
@@ -25,8 +31,6 @@ class CampTest < ActiveSupport::TestCase
   context "Creating a set of camps" do
     setup do
       create_camp
-      
-      
     end
 
     teardown do
@@ -42,7 +46,7 @@ class CampTest < ActiveSupport::TestCase
       assert_equal ["CS ghanim"], Camp.inactive.alphabetical.map{|c| c.name1}
   end
   
-should "have a scope to alphabetize curriculum names of the camps" do
+  should "have a scope to alphabetize curriculum names of the camps" do
       assert_equal ["CS","IS", "IS"], Camp.alphabetical.all.map(&:name),"#{Camp.class}"
   end
   
@@ -74,26 +78,44 @@ should "have a scope to alphabetize curriculum names of the camps" do
       assert_equal "IS", @cam1.name
       assert_equal "IS", @cam2.name
       assert_equal "CS", @cam3.name
-    end
+  end
+    
+  should "have a name validation/method that checks if the max_students < max_capacity" do
+      assert_nil nil, @cam1.check
+      assert_nil nil, @cam2.check
+      assert_nil nil, @cam3.check
+  end
     
     
   should "have a name validation/method that checks if the location is active" do
       assert_nil nil, @cam1.location_id_check
       assert_nil nil, @cam2.location_id_check
       assert_nil nil, @cam3.location_id_check
-    end
+  end
     
   should "have a name validation/method that checks if the curriculum  is active" do
       assert_nil nil, @cam1.curriculum_id_check
       assert_nil nil, @cam2.curriculum_id_check
       assert_nil nil, @cam3.curriculum_id_check
-    end
+  end
     
-  
+  should "have a scope that destroys instructors of inactive camp" do
+      assert_nil nil, @cam1.remove_instructors
+  end
     
-  
-  
-  
+  # should "have a name validation/method that checks if the start_date is >= date.today" do
+  #     assert_nil nil, @cam1.start_date_check
+  #     assert_nil nil, @cam2.start_date_check
+  #     assert_equal ["has to be the same as current date or in the future"], @cam3.start_date_check
+  # end 
+    
+  # should "have a name validation/method that checks if the end_date is >= start_date" do
+  #     assert_nil nil, @cam1.end_date_check
+  #     assert_nil nil, @cam2.end_date_check
+  #     assert_nil nil, @cam3.end_date_check
+  # end 
+    
+    
   
   end
 end
