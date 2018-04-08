@@ -8,7 +8,7 @@ module Contexts
         @l1 = FactoryBot.create(:location, name: "ghanim", street_1:"al-taei", zip: "12345", max_capacity: 200)
         @is = FactoryBot.create(:curriculum, name: "IS", min_rating: 125, max_rating: 2900 )
         @cam1 = FactoryBot.create(:camp, curriculum: @is, location: @l1, cost: 1000.5, start_date: Date.new(2018,4,9), end_date: Date.new(2018,4,10), time_slot: "am", max_students:100 )
-        
+        @cam_ins1 = FactoryBot.create(:camp_instructor, camp: @cam1, instructor: @ins1)
       end
   
       def destroy_instructor

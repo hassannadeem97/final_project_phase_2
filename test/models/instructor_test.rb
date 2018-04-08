@@ -55,7 +55,7 @@ class InstructorTest < ActiveSupport::TestCase
     
     
   should "have a method that returns Instructors for a camp" do
-      assert_nil nil, Instructor.new.for_camp(@cam1)
+      assert_equal [@ins1], @ins1.for_camp(@cam1)
   end
   
   

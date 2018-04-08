@@ -28,11 +28,7 @@ class Instructor < ApplicationRecord
     end 
     
     def for_camp(camp) #not sure if works 
-        arr = Array.new
-        camp.camp_instructors.each do |c|
-            arr << c.instructor
-        end 
-        puts arr
+        Instructor.joins( :camp_instructors => :camp).where('camp_id = ?', camp.id)
     end 
     
     
