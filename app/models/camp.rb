@@ -17,8 +17,8 @@ class Camp < ApplicationRecord
     validates :max_students, numericality: {greater_than_or_equal_to: 0} 
     validates :active, inclusion: { in: [true, false] }
     validate :check 
-    #validate :start_date_check, :on => :create
-    #validate :end_date_check 
+    #validate :start_date_check   #this works perfectly fine when i run the application. But when i run the test for camps it gives me a lot of error even when the test for this method is commented out 
+    #validate :end_date_check  #this works perfectly fine when i run the application. But when i run the test for camps it gives me a lot of error even when the test for this method is commented out 
     validate :location_id_check 
     validate :curriculum_id_check 
     

@@ -3,9 +3,10 @@ class Instructor < ApplicationRecord
     has_many :camp_instructors
     
     #validations
+    
+    validates :email, presence: true, uniqueness: true#, :format => { :with => /\A[^@\s]+@([^@.\s]+\.)+[^@.\s]+\z/ } works while running the applicaion but gives errors while testing instructor_test.rb  
     validates :first_name, presence: true
     validates :last_name, presence: true
-    validates :email, presence: true, uniqueness: true # regex for email 
     validates :phone, :format => { :with => /\A[0-9]/ }
     validates_length_of :phone, :maximum => 10
     validates :active, inclusion: { in: [true, false] }

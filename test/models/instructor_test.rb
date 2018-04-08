@@ -20,9 +20,9 @@ class InstructorTest < ActiveSupport::TestCase
       create_instructor
     end
 
-    # teardown do
-    #   destroy_instructor 
-    # end
+    teardown do
+      destroy_instructor 
+    end
   
   
   should "have name methods that list first_ and last_names combined" do
